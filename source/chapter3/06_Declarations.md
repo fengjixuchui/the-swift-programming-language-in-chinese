@@ -137,7 +137,7 @@ print("The second number is \(secondNumber).")
 
 当常量名称的类型（`:` 类型）可以被推断出时，类型注解在常量声明中是可选的，正如 [类型推断](./03_Types.md#type_inference) 中所描述的。
 
-声明一个常量类型属性要使用 `static` 声明修饰符。类型属性在 [类型属性](../chapter2/10_Properties.md#type_properties)中有介绍。
+声明一个常量类型属性要使用 `static` 声明修饰符。类的常量类型属性总是隐式地被标记为 `final` ；你无法用 `class` 或 `final` 声明修饰符实现允许或禁止被子类重写的目的。类型属性在 [类型属性](../chapter2/10_Properties.md#type_properties) 中有介绍。
 
 如果还想获得更多关于常量的信息或者想在使用中获得帮助，请参阅 [常量和变量](../chapter2/01_The_Basics.md#constants_and_variables) 和 [存储属性](../chapter2/10_Properties.md#stored_properties)。
 
@@ -251,11 +251,6 @@ var 变量名称: 类型 = 表达式 {
 ### 类型变量属性 {#type-variable-properties}
 要声明一个类型变量属性，用 `static` 声明修饰符标记该声明。类可以改用 `class` 声明修饰符标记类的类型计算型属性从而允许子类重写超类的实现。类型属性在 [类型属性](../chapter2/10_Properties.md#type_properties) 章节有详细讨论。
 
-> 注意
-> 
-> 在一个类声明中，使用关键字 `static` 与同时使用 `class` 和 `final` 去标记一个声明的效果相同。
-> 
-
 
 #### grammer_of_a_variable_declaration {#grammer-of-a-variable-declaration}
 > 变量声明语法
@@ -356,20 +351,16 @@ typealias 类型别名 = 现存类型
 
 ```swift
 typealias StringDictionary<Value> = Dictionary<String, Value>
-> 
 
 // 下列两个字典拥有同样的类型
 var dictionary1: StringDictionary<Int> = [:]
-> 
 var dictionary2: Dictionary<String, Int> = [:]
-> 
 ```
 
 当一个类型别名带着泛型参数一起被声明时，这些参数的约束必须与现有参数的约束完全匹配。例如:
 
 ```swift
 typealias DictionaryOfInts<Key: Hashable> = Dictionary<Key, Int>
-> 
 ```
 
 因为类型别名可以和现有类型相互交换使用，类型别名不可以引入额外的类型约束。
@@ -389,7 +380,6 @@ protocol Sequence {
 }
 
 func sum<T: Sequence>(_ sequence: T) -> Int where T.Element == Int {
-> 
     // ...
 }
 ```
@@ -424,7 +414,6 @@ func sum<T: Sequence>(_ sequence: T) -> Int where T.Element == Int {
 
 ```swift
 func 函数名称(参数列表) -> 返回类型 {
-> 
 	语句
 }
 ```
@@ -438,6 +427,8 @@ func 函数名称(参数列表) {
 ```
 
 每个参数的类型都要标明，因为它们不能被推断出来。如果您在某个参数类型前面加上了 `inout`，那么这个参数就可以在这个函数作用域当中被修改。更多关于 `inout` 参数的讨论，请参阅 [输入输出参数](#in-out_parameters)。
+
+函数声明中语句只包含一个表达式，可以理解为返回该表达式的值。
 
 函数可以使用元组类型作为返回类型来返回多个值。
 
@@ -456,7 +447,6 @@ func 函数名称(参数列表) {
 
 ```swift
 func f(x: Int, y: Int) -> Int { return x + y }
-> 
 f(x: 1, y: 2) // 参数 x 和 y 都有标签
 ```
 
@@ -495,7 +485,6 @@ repeatGreeting("Hello, world!", count: 2) //  count 有标签, greeting 没有
 
 ```swift
 func someFunction(a: inout Int) -> () -> Int {
-> 
     return { [a] in return a + 1 }
 }
 ```
@@ -535,7 +524,7 @@ _ : 参数类型
 
 ```swift
 func f(x: Int = 42) -> Int { return x }
-> 
+
 f()     // 有效，使用默认值
 f(7)    // 有效，提供了值
 f(x: 7) // 无效，该参数没有外部名称
@@ -546,14 +535,13 @@ f(x: 7) // 无效，该参数没有外部名称
 
 子类重写超类中的方法必须以 `override` 声明修饰符标记。重写方法时不使用 `override` 修饰符，或者被 `override` 修饰符修饰的方法并未对超类方法构成重写，都会导致编译错误。
 
-枚举或者结构体中的类型方法，要以 `static` 声明修饰符标记，而对于类中的类型方法，除了使用 `static`，还可使用 `class` 声明修饰符标记。类中使用 `class` 声明修饰的方法可以被子类实现重写；类中使用 `static` 声明修饰的方法不可被重写。
+枚举或者结构体中的类型方法，要以 `static` 声明修饰符标记，而对于类中的类型方法，除了使用 `static`，还可使用 `class` 声明修饰符标记。类中使用 `class` 声明修饰的方法可以被子类实现重写；类中使用  `class final` 或  `static` 声明修饰的方法不可被重写。
 
 ### 抛出错误的函数和方法 {#throwing-functions-and-methods}
 可以抛出错误的函数或方法必须使用 `throws` 关键字标记。这类函数和方法被称为抛出函数和抛出方法。它们有着下面的形式:
 
 ```swift
 func 函数名称(参数列表) throws -> 返回类型 {
-> 
 	语句
 }
 ```
@@ -571,7 +559,6 @@ func 函数名称(参数列表) throws -> 返回类型 {
 
 ```swift
 func someFunction(callback: () throws -> Void) rethrows {
-> 
     try callback()
 }
 ```
@@ -583,7 +570,6 @@ func alwaysThrows() throws {
     throw SomeError.error
 }
 func someFunction(callback: () throws -> Void) rethrows {
-> 
     do {
         try callback()
         try alwaysThrows()  // 非法, alwaysThrows() 不是一个抛出函数类型的参数
@@ -598,7 +584,7 @@ func someFunction(callback: () throws -> Void) rethrows {
 ### 永不返回的函数 {#functions-that-never-return}
 Swift 定义了 `Never` 类型，它表示函数或者方法不会返回给它的调用者。`Never` 返回类型的函数或方法可以称为不归，不归函数、方法要么引发不可恢复的错误，要么永远不停地运作，这会使调用后本应执行得代码就不再执行了。但即使是不归函数、方法，抛错函数和重抛出函数也可以将程序控制转移到合适的 `catch` 代码块。
 
-不归函数、方法可以在 guard 语句的 else 字句中调用，具体讨论在[*Guard 语句*](./05_Statements.md#guard_statements)。
+不归函数、方法可以在 guard 语句的 else 字句中调用，具体讨论在 [*Guard 语句*](./05_Statements.md#guard_statements)。
 
 你可以重写一个不归方法，但是新的方法必须保持原有的返回类型和没有返回的行为。
 
@@ -711,7 +697,6 @@ enum Number {
 }
 
 // f 的类型为 (Int) -> Number
-> 
 let f = Number.integer
 
 // 利用 f 把一个整数数组转成 Number 数组
@@ -727,7 +712,6 @@ let evenInts: [Number] = [0, 2, 4, 6].map(f)
 
 ```swift
 enum Tree<T> {
-> 
 	case empty
 	indirect case node(value: T, left: Tree, right:Tree)
 }
@@ -893,7 +877,7 @@ struct 结构体名称: 采纳的协议 {
 
 结构体实例的属性可以用点语法（`.`）来访问，正如 [访问属性](../chapter2/09_Structures_And_Classes.md#accessing_properties) 所述。
 
-结构体是值类型。结构体的实例在被赋予变量或常量，或传递给函数作为参数时会被复制。关于值类型的更多信息，请参阅
+结构体是值类型。结构体的实例在被赋予变量或常量，或传递给函数作为参数时会被复制。关于值类型的更多信息，请参阅 
 [结构体和枚举是值类型](../chapter2/09_Structures_And_Classes.md#structures_and_enumerations_are_value_types)。
 
 可以使用扩展声明来扩展结构体类型的行为，请参阅 [扩展声明](#extension_declaration)。
@@ -1014,7 +998,7 @@ protocol 协议名称: 继承的协议 {
 
 可以通过类型的扩展声明来采纳协议，从而为之前声明的类型添加协议一致性。在扩展中，必须实现所有采纳协议的要求。如果该类型已经实现了所有的要求，可以让这个扩展声明的主体留空。
 
-默认地，符合某个协议的类型必须实现所有在协议中声明的属性、方法和下标。即便如此，可以用 `optional` 声明修饰符标注协议成员声明，以指定它们的实现是可选的。`optional` 修饰符仅仅可以用于使用 `objc` 特性标记过的协议。因此，仅仅类类型可以采用并符合包含可选成员要求的协议。更多关于如何使用 `optional` 声明修饰符的信息，以及如何访问可选协议成员的指导——例如不能确定采纳协议的类型是否实现了它们时——请参阅 [可选协议要求](../chapter2/21_Protocols.md#optional_protocol_requirements)
+默认地，符合某个协议的类型必须实现所有在协议中声明的属性、方法和下标。即便如此，可以用 `optional` 声明修饰符标注协议成员声明，以指定它们的实现是可选的。`optional` 修饰符仅仅可以用于使用 `objc` 特性标记过的协议。因此，仅仅类类型可以采用并符合包含可选成员要求的协议。更多关于如何使用 `optional` 声明修饰符的信息，以及如何访问可选协议成员的指导——例如不能确定采纳协议的类型是否实现了它们时——请参阅 [可选协议要求](../chapter2/21_Protocols.md#optional_protocol_requirements)。
 
 为了限制协议只能被类类型采纳，需要使用 `AnyObject` 关键字来标记协议，将 `AnyObject` 关键在写在冒号后面的继承的协议列表的首位。例如，下面的协议只能被类类型采纳：
 
@@ -1092,7 +1076,9 @@ var 属性名: 类型 { get set }
 
 同其它协议成员声明一样，这些属性声明仅仅针对符合该协议的类型声明了 getter 和 setter 要求，你不能在协议中直接实现 getter 和 setter。
 
-符合类型可以通过多种方式满足 getter 和 setter 要求。如果属性声明包含 `get` 和 `set` 关键字，符合类型就可以用存储型变量属性或可读可写的计算型属性来满足此要求，但是属性不能以常量属性或只读计算型属性实现。如果属性声明仅仅包含 `get` 关键字的话，它可以作为任意类型的属性被实现。关于如何实现协议中的属性要求的例子，请参阅 [属性要求](../chapter2/21_Protocols.md#property_requirements)
+符合类型可以通过多种方式满足 getter 和 setter 要求。如果属性声明包含 `get` 和 `set` 关键字，符合类型就可以用存储型变量属性或可读可写的计算型属性来满足此要求，但是属性不能以常量属性或只读计算型属性实现。如果属性声明仅仅包含 `get` 关键字的话，它可以作为任意类型的属性被实现。关于如何实现协议中的属性要求的例子，请参阅 [属性要求](../chapter2/21_Protocols.md#property_requirements) 。
+
+协议声明中声明一个类型属性，属性声明语句必须用 `static` 声明修饰符。当结构体和枚举遵循该协议时，使用 `static` 关键字修饰，而类遵循该协议时，使用 `static` 或 `class` 关键字皆可。当结构体，枚举或类添加扩展遵循协议时，和之前扩展用到的关键字保持一致。扩展为类属性提供默认实现时，必须使用 `static` 关键字修饰。
 
 另请参阅 [变量声明](#variable_declaration)。
 
@@ -1109,7 +1095,7 @@ var 属性名: 类型 { get set }
 ### 协议方法声明 {#protocol-method-declaration}
 协议可以通过在协议声明主体中引入一个协议方法声明，来声明符合的类型必须实现的方法。协议方法声明和函数方法声明有着相同的形式，但有两项例外：它们不包括函数体，也不能包含默认参数。关于如何实现协议中的方法要求的例子，请参阅 [方法要求](../chapter2/21_Protocols.md#method_requirements)。
 
-使用 `static` 声明修饰符可以在协议声明中声明一个类型方法。类在实现这些方法时使用 `class` 声明修饰符。结构体实现这些方法时必须使用 `static` 声明修饰符。通过扩展实现时亦是如此（类的扩展中使用 `class` 声明修饰符，结构体的扩展中使用 `static` 声明修饰符）。
+协议声明中声明一个类型方法，方法声明语句必须用 `static` 声明修饰符。结构体和枚举遵循协议时，必须使用 `static` 关键字修饰，而类遵循协议时，使用 `static` 或 `class` 关键字皆可。当结构体，枚举或类添加扩展遵循协议时，和之前扩展用到的关键字保持一致。扩展为类方法提供默认实现时，必须使用 `static` 关键字修饰。
 
 另请参阅 [函数声明](#function_declaration)。
 
@@ -1150,10 +1136,11 @@ var 属性名: 类型 { get set }
 
 ```swift
 subscript (参数列表) -> 返回类型 { get set }
-> 
 ```
 
 下标声明只为符合类型声明了 getter 和 setter 要求。如果下标声明包含 `get` 和 `set` 关键字，符合类型也必须实现 getter 和 setter 子句。如果下标声明只包含 `get` 关键字，符合类型必须实现 getter 子句，可以选择是否实现 setter 子句。
+
+协议声明中声明一个静态下标，下标声明语句必须用 `static` 声明修饰符。当结构体和枚举遵循该协议时，下标声明使用 `static` 关键字修饰，而类遵循该协议时，使用 `static` 或 `class` 关键字皆可。当结构体，枚举或类添加扩展遵循协议时，和之前扩展用到的关键字保持一致。扩展为下标声明提供默认实现时，必须使用 `static` 关键字修饰。
 
 另请参阅 [下标声明](#subscript_declaration)。
 
@@ -1441,18 +1428,15 @@ doSomething(with: oneAndTwo)
 ```swift
 protocol Serializable {
     func serialize() -> Any
-> 
 }
 
 extension Array: Serializable where Element == Int {
     func serialize() -> Any {
-> 
         // implementation
     }
 }
 extension Array: Serializable where Element == String {
     func serialize() -> Any {
-> 
         // implementation
     }
 }
@@ -1468,7 +1452,6 @@ extension String: SerializableInArray { }
 
 extension Array: Serializable where Element: SerializableInArray {
     func serialize() -> Any {
-> 
         // 具体实现
     }
 }
@@ -1536,7 +1519,6 @@ extension Array: Loggable where Element: MarkedLoggable { }
 
 ```swift
 subscript (参数列表) -> 返回类型 {
-> 
 	get {
 		语句
 	}
@@ -1552,15 +1534,20 @@ subscript (参数列表) -> 返回类型 {
 
 和计算型属性一样，下标声明支持对元素的读写操作。getter 用于读取值，setter 用于写入值。setter 子句是可选的，当仅需要一个 getter 子句时，可以将二者都忽略，直接返回请求的值即可。但是，如果提供了 setter 子句，就必须提供 getter 子句。
 
-圆括号以及其中的 setter 名称是可选的。如果提供了 setter 名称，它会作为 setter 的参数名称。如果不提供 setter 名称，那么 setter 的参数名称默认是 `value`。setter 名称的类型必须与返回类型相同。
+圆括号以及其中的 setter 名称是可选的。如果提供了 setter 名称，它会作为 setter 的参数名称。如果不提供 setter 名称，那么 setter 的参数名称默认是 `value`。setter 的参数类型必须与返回类型相同。
 
 可以重写下标，只要参数列表或返回类型不同即可。还可以重写继承自超类的下标，此时必须使用 `override` 声明修饰符声明被重写的下标。
 
-在默认情况下，下标中的参数不会含有
+下标参数遵循与函数参数相同的规则，但有两个例外。默认情况下，下标中使用的参数不需要指定标签，这与函数，方法和构造器不同。但是你也可以同它们一样，显式地提供参数标签。此外，下标不能有 `In-out` 参数。
 
 同样可以在协议声明中声明下标，正如 [协议下标声明](#protocol_subscript_declaration) 中所述。
 
 更多关于下标的信息和例子，请参阅 [下标](../chapter2/12_Subscripts.md)。
+
+### 类型下标声明 
+
+声明一个由类型而不是类型实例公开的下标，请使用 `static` 声明修饰符标记下标声明。类可以使用 `class` 声明修饰符标记类型计算属性，以允许子类重写父类的实现。在类声明中，`static` 关键字具有与用 `class` 和 `final` 声明修饰符标记声明相同的效果。
+
 
 
 #### grammer_of_a_subscript_declaration {#grammer-of-a-subscript-declaration}
@@ -1673,7 +1660,7 @@ precedencegroup 优先级组名称{
 > 使用较低和较高优先级组相互联系的优先级组必须保持单一层次关系，但它们不必是线性关系。这意味着优先级组也许会有未定义的相关优先级。这些优先级组的运算符在没有用圆括号分组的情况下是不能紧邻着使用的。
 > 
 
-Swift 定义了大量的优先级组来与标准库的运算符配合使用，例如相加（`+`）和相减（`-`）属于 `AdditionPrecedence` 组，相乘（`*`）和相除（`/`）属于 `MultiplicationPrecedence` 组，详细关于 Swift 标准库中一系列运算符和优先级组内容，参阅[Swift 标准库操作符参考](https://developer.apple.com/documentation/swift/operator_declarations)。
+Swift 定义了大量的优先级组来与标准库的运算符配合使用，例如相加（`+`）和相减（`-`）属于 `AdditionPrecedence` 组，相乘（`*`）和相除（`/`）属于 `MultiplicationPrecedence` 组，详细关于 Swift 标准库中一系列运算符和优先级组内容，参阅 [Swift 标准库操作符参考](https://developer.apple.com/documentation/swift/operator_declarations)。
 
 运算符的结合性表示在没有圆括号分组的情况下，同样优先级的一系列运算符是如何被分组的。你可以指定运算符的结合性通过上下文关键字 `left`、`right` 或者 `none`,如果没有指定结合性，默认是 `none` 关键字。左关联性的运算符是从左至右分组的，例如，相减操作符（-）是左关联性的，所以表达式 `4 - 5 - 6` 被分组为 `(4 - 5) - 6`,得出结果-7。右关联性的运算符是从右往左分组的，指定为 `none` 结合性的运算符就没有结合性。同样优先级没有结合性的运算符不能相邻出现，例如 `<` 运算符是 `none` 结合性，那表示 `1 < 2 < 3` 就不是一个有效表达式。
 
@@ -1731,6 +1718,10 @@ Swift 定义了大量的优先级组来与标准库的运算符配合使用，�
 ## 声明修饰符 {#Declaration-Modifiers}
 声明修饰符都是关键字或上下文相关的关键字，可以修改一个声明的行为或者含义。可以在声明的特性（如果存在）和引入该声明的关键字之间，利用声明修饰符的关键字或上下文相关的关键字指定一个声明修饰符。
 
+`class`
+
+该修饰符用于修饰任何类成员，表明是类自身的成员，而不是类实例的成员。父类中使用该修饰符标记或者未被 `final` 修饰符标记的成员，都允许被子类重写。
+
 `dynamic`
 
 该修饰符用于修饰任何兼容 Objective-C 的类的成员。访问被 `dynamic` 修饰符标记的类成员将总是由 Objective-C 运行时系统进行动态派发，而不会由编译器进行内联或消虚拟化。
@@ -1755,6 +1746,10 @@ Swift 定义了大量的优先级组来与标准库的运算符配合使用，�
 
 该修饰符用于修饰类的指定构造器或便利构造器，表示该类所有的子类都必须实现该构造器。在子类实现该构造器时，必须同样使用 `required` 修饰符修饰该构造器。
 
+`static`
+
+该修饰符用于修饰结构体、类、枚举或协议的成员，表明是类型成员，而不是类型实例的成员。在类声明的作用范围内，使用 `static` 修饰符标记成员声明语句，同 `class` 和 `final` 修饰符具有相同的效果。但是类的常量类型属性是一个例外： `static` 没有问题，但是你无法为常量声明使用 `class` 或 `final` 修饰符。
+
 `unowned`
 
 该修饰符用于修饰存储型变量、常量或者存储型变量属性，表示该变量或属性持有其存储对象的无主引用。如果在此存储对象释放后尝试访问该对象，会引发运行时错误。如同弱引用一样，该引用类型的变量或属性必须是类类型。与弱引用不同的是，这种类型的变量或属性是非可选的。关于 `unowned` 更多的信息和例子，请参阅 [无主引用](../chapter2/23_Automatic_Reference_Counting.md#unowned_references)
@@ -1765,7 +1760,7 @@ Swift 定义了大量的优先级组来与标准库的运算符配合使用，�
 
 `unowned(unsafe)`
 
-该修饰符用于修饰存储型变量、常量或者存储型变量属性，表示该变量或属性持有其存储对象的无主引用。如果在此存储对象释放后尝试访问该对象，会直接访问该对象释放前存储的内存地址，因此这是非内存安全的操作。如同弱引用一样，该引用类型的变量或属性必须是类类型。与弱引用不同的是，这种类型的变量或属性是非可选的。关于 `unowned` 更多的信息和例子，请参阅 [无主引用](
+该修饰符用于修饰存储型变量、常量或者存储型变量属性，表示该变量或属性持有其存储对象的无主引用。如果在此存储对象释放后尝试访问该对象，会直接访问该对象释放前存储的内存地址，因此这是非内存安全的操作。如同弱引用一样，该引用类型的变量或属性必须是类类型。与弱引用不同的是，这种类型的变量或属性是非可选的。关于 `unowned` 更多的信息和例子，请参阅 [无主引用](../chapter2/23_Automatic_Reference_Counting.md#resolving_strong_reference_cycles_between_class_instances)。
 
 `weak`
 
@@ -1810,4 +1805,4 @@ Swift 提供了三个级别的访问控制：`public`、`internal` 和 `private`
 > 访问级别修饰符 → **private** | **private ( set )**
 > 
 > 访问级别修饰符 → **public** | **public ( set )**
-> 
+>
