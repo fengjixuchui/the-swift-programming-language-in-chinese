@@ -64,7 +64,7 @@ for item in collection {
 >
 
 #### for-in-statement {#for-in-statement}
-> *for-in 语句* → **for** **case**<sub>可选</sub> [模式](./08_Patterns.md#pattern) **in** [表达式](./04-Expressions.md#expression) [where 子句](#where-clause)<sub>可选</sub> [代码块](05-Declarations.md#code-block)
+> *for-in 语句* → **for** **case**<sub>可选</sub> [模式](./08_Patterns.md#pattern) **in** [表达式](./04_Expressions.md#expression) [where 子句](#where-clause)<sub>可选</sub> [代码块](./06_Declarations.md#code-block)
 > 
 
 ### While 语句 {#while-statements}
@@ -92,12 +92,12 @@ while condition {
 >
 
 #### while-statement {#while-statement}
-> *while 语句* → **while** [条件子句](#condition-clause) [代码块](./05-Declarations.md#code-block)
+> *while 语句* → **while** [条件子句](#condition-clause) [代码块](./06_Declarations.md#code-block)
 > 
 
 
 #### condition-clause {#condition-clause}
-> *条件子句* → [表达式](./04_Expressions.md#expression)  | [表达式](./04-Expressions.md#expression) **,** [条件列表](#condition-list)
+> *条件子句* → [表达式](./04_Expressions.md#expression)  | [表达式](./04_Expressions.md#expression) **,** [条件列表](#condition-list)
 > 
 
 #### condition {#condition}
@@ -106,11 +106,11 @@ while condition {
 >
 
 #### case-condition {#case-condition}
-> *case 条件* → **case** [模式](./08_Patterns.md#pattern) [构造器](./06-Declarations.md#initializer)
+> *case 条件* → **case** [模式](./08_Patterns.md#pattern) [构造器](./06_Declarations.md#initializer)
 > 
 
 #### optional-binding-condition {#optional-binding-condition}
-> *可选绑定条件* →  **let** [模式](./08_Patterns.md#pattern) [构造器](./06-Declarations.md#initializer) | **var**  [模式](./08-Patterns.md#pattern) [构造器](./06-Declarations.md#initializer)
+> *可选绑定条件* →  **let** [模式](./08_Patterns.md#pattern) [构造器](./06_Declarations.md#initializer) | **var**  [模式](./08_Patterns.md#pattern) [构造器](./06_Declarations.md#initializer)
 > 
 
 ### Repeat-While 语句 {#repeat-while-statements}
@@ -138,7 +138,7 @@ repeat {
 >
 
 #### repeat-while-statement {#repeat-while-statement}
-> *repeat-while 语句* → **repeat** [代码块](./06_Declarations.md#code-block) **while** [表达式](./04-Expressions.md#expression)
+> *repeat-while 语句* → **repeat** [代码块](./06_Declarations.md#code-block) **while** [表达式](./04_Expressions.md#expression)
 > 
 
 ## 分支语句 {#branch-statements}
@@ -200,7 +200,7 @@ if condition 1 {
 >
 
 #### if-statement {#if-statement}
-> *if 语句* → **if** [条件子句](#condition-clause) [代码块](05-Declarations.md#code-block) [else 子句](#else-clause)<sub>可选</sub>
+> *if 语句* → **if** [条件子句](#condition-clause) [代码块](./06_Declarations.md#code-block) [else 子句](#else-clause)<sub>可选</sub>
 > 
 
 #### else-clause {#else-clause}
@@ -228,14 +228,14 @@ guard condition else {
  *  `continue`
  *  `throw`
 
-关于控制转移语句，请参阅 [控制转移语句](#control-transfer-statements)。关于 `Never` 返回类型的函数，请参阅 [永不返回的函数](05-Declarations.md#rethrowing-functions-and-methods)。
+关于控制转移语句，请参阅 [控制转移语句](#control-transfer-statements)。关于 `Never` 返回类型的函数，请参阅 [永不返回的函数](./06_Declarations.md#rethrowing-functions-and-methods)。
 
 > guard 语句语法
 > 
 >
 
 #### guard-statement {#guard-statement}
-> *guard 语句* → **guard** [条件子句](#condition-clause) **else** [代码块](05-Declarations.md#code-block)
+> *guard 语句* → **guard** [条件子句](#condition-clause) **else** [代码块](./06_Declarations.md#code-block)
 
 ### Switch 语句 {#switch-statements}
 
@@ -325,7 +325,7 @@ case .suppressed:
 > 
 
 #### case-item-list {#case-item-list}
-> *case 项列表* → [模式](./08_Patterns.md#pattern) [where 子句](#where-clause)<sub>可选</sub> | [模式](07-Patterns.md#pattern) [where 子句](#where-clause)<sub>可选</sub> **,** [case 项列表](#case-item-list)
+> *case 项列表* → [模式](./08_Patterns.md#pattern) [where 子句](#where-clause)<sub>可选</sub> | [模式](./08_Patterns.md#pattern) [where 子句](#where-clause)<sub>可选</sub> **,** [case 项列表](#case-item-list)
 > 
 
 #### default-label {#default-label}
@@ -424,7 +424,7 @@ case .suppressed:
 
 无论哪种情况，控制权都会被转移给被终止的控制流语句后面的第一行语句。
 
-关于使用 `break` 语句的例子，请参阅 [控制流](../02_language_guide/05_Control_Flow.md) 一章的 [Break](../02_language_guide/05_Control_Flow.md#break) 和 [带标签的语句](../02-language-guide/05-Control-Flow.md#labeled-statements)。
+关于使用 `break` 语句的例子，请参阅 [控制流](../02_language_guide/05_Control_Flow.md) 一章的 [Break](../02_language_guide/05_Control_Flow.md#break) 和 [带标签的语句](../02_language_guide/05_Control_Flow.md#labeled-statements)。
 
 > break 语句语法
 > 
@@ -450,7 +450,7 @@ case .suppressed:
 
 在 `for` 语句中，`continue` 语句执行后，增量表达式还是会被计算，这是因为每次循环体执行完毕后，增量表达式都会被计算。
 
-关于使用 `continue` 语句的例子，请参阅 [控制流](../02_language_guide/05_Control_Flow.md) 一章的 [Continue](../02_language_guide/05_Control_Flow.md#continue) 和 [带标签的语句](../02-language-guide/05-Control-Flow.md#labeled-statements)。
+关于使用 `continue` 语句的例子，请参阅 [控制流](../02_language_guide/05_Control_Flow.md) 一章的 [Continue](../02_language_guide/05_Control_Flow.md#continue) 和 [带标签的语句](../02_language_guide/05_Control_Flow.md#labeled-statements)。
 
 > continue 语句语法
 > 
@@ -500,7 +500,7 @@ case .suppressed:
 >
 
 #### return-statement {#return-statement}
-> *return 语句* → **return** [表达式](./04_Expressions.html#expression)<sub>可选</sub>
+> *return 语句* → **return** [表达式](./04_Expressions.md#expression)<sub>可选</sub>
 
 ### Throw 语句 {#throw-statements}
 
@@ -577,10 +577,18 @@ do {
     statements
 } catch pattern 2 where condition {
     statements
+} catch pattern 3, pattern 4 where condition {
+    statements
+} catch {
+    statements
 }
 ```
 
-如同 `switch` 语句，编译器会判断 `catch` 子句是否有遗漏。如果 `catch` 子句没有遗漏，则认为错误已被处理。否则，错误会自动传递到外围作用域，被某个 `catch` 子句处理掉或者被用 `throws` 关键字声明的抛出函数继续向外抛出。
+如果 `do` 代码块中的任何语句抛出了错误，程序会跳转到第一个能模式匹配该错误的 `catch` 子句。如果没有任何子句匹配，错误会传递到外层作作用域。如果错误在最顶层依旧没有被处理，程序执行会因为运行时错误而停止。
+
+如同 `switch` 语句，编译器会判断 `catch` 子句是否有遗漏。如果 `catch` 子句没有遗漏，则认为错误已被处理。否则，错误会自动传递到外层作用域，被某个 `catch` 子句处理掉或者被用 `throws` 关键字声明的抛出函数继续向外抛出。
+
+拥有多个模式匹配的 `catch` 子句只需其中一个匹配到错误即可。如果 `catch` 子句拥有多个模式匹配，所有的模式必须包含相同的绑定常量或变量，并且每个 `catch` 子句里所有绑定的变量或常量的类型必须相同。
 
 为了确保错误已经被处理，可以让 `catch` 子句使用匹配所有错误的模式，如通配符模式（`_`）。如果一个 `catch` 子句不指定一种具体模式，`catch` 子句会匹配任何错误，并绑定到名为 `error` 的局部常量。有关在 `catch` 子句中使用模式的更多信息，请参阅 [模式](./08_Patterns.md)。
 
@@ -599,8 +607,13 @@ do {
 > 
 
 #### catch-clause {#catch-clause}
-> *catch 子句* → **catch** [模式](./08_Patterns.md#pattern)<sub>可选</sub> [where 子句](#where-clause)<sub>可选</sub> [代码块](05-Declarations.md#code-block)
-> 
+> *catch 子句* → **catch** [模式](./08_Patterns.md#pattern)<sub>可选</sub> [where 子句](#where-clause)<sub>可选</sub> [代码块](./06_Declarations.md#code-block)
+
+#### catch-pattern-list{#catch-pattern-list}
+> *catch 模式列表* → [catch 模式](#catch-pattern) | [catch 模式](#catch-pattern) ，[catch 模式列表](#catch-pattern-list)
+
+#### catch-pattern{#catch-pattern}
+> *catch 模式* → [模式](./08_Patterns.md#pattern) [where 子句](./05_Statements.md#where-clause)<sub>可选</sub>
 
 ## 编译器控制语句 {#compiler-control-statements}
 编译器控制语句允许程序改变编译器的行为。Swift 有三种编译器控制语句：条件编译语句、线路控制语句和编译时诊断语句。
@@ -789,13 +802,11 @@ statements to compile if both compilation conditions are false
 
 行控制语句形式如下：
 
-> \#sourceLocation(file: `filename` , line:`line number`)
-> 
+> #sourceLocation(file: file path, line: line number)
+>
+> #sourceLocation()
 
-> \#sourceLocation()
-> 
-
-第一种的行控制语句会改变该语句之后的代码中的字面量表达式 `#line` 和 `#file` 所表示的值。`行号` 是一个大于 0 的整形字面量，会改变 `#line` 表达式的值。`文件名` 是一个字符串字面量，会改变 `#file` 表达式的值。
+第一种的行控制语句会改变该语句之后的代码中的字面量表达式 `#line`、 `#file` 和 `#filePath` 所表示的值，从行控制语句里行号的代码开始。`行号` 是一个大于 0 的整形字面量，会改变 `#line` 表达式的值。`文件名` 是一个字符串字面量，会改变 `#file` 和 `#filePath` 表达式的值。指定的字符串会变成 `#filePath` 的值，且字符串最后的路径部分会变成 `#file` 的值。
 
 第二种的行控制语句，`#sourceLocation()`，会将源代码的定位信息重置回默认的行号和文件名。
 
@@ -887,6 +898,6 @@ if #available(platform name version, ..., *) {
 #### platform-version {#platform-version}
 > *平台版本* → [十进制数字](./02_Lexical_Structure.md#decimal-digits)
 > 
-> *平台版本* → [十进制数字](./02_Lexical_Structure.md#decimal-digits) **.** [十进制数字](./02-Lexical-Structure.md#decimal-digits)
+> *平台版本* → [十进制数字](./02_Lexical_Structure.md#decimal-digits) **.** [十进制数字](./02_Lexical_Structure.md#decimal-digits)
 > 
-> *平台版本* → [十进制数字](./02_Lexical_Structure.md#decimal-digits) **.** [十进制数字](./02-Lexical-Structure.md#decimal-digits) **.** [十进制数字](./02-Lexical-Structure.md#decimal-digits)
+> *平台版本* → [十进制数字](./02_Lexical_Structure.md#decimal-digits) **.** [十进制数字](./02_Lexical_Structure.md#decimal-digits) **.** [十进制数字](./02_Lexical_Structure.md#decimal-digits)

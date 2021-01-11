@@ -142,12 +142,14 @@ do {
     statements
 } catch pattern 2 where condition {
     statements
+} catch pattern 3, pattern 4 where condition {
+    statements
 } catch {
     statements
 }
 ```
 
-在 `catch` 后面写一个匹配模式来表明这个子句能处理什么样的错误。如果一条 `catch` 子句没有指定匹配模式，那么这条子句可以匹配任何错误，并且把错误绑定到一个名字为 `error` 的局部常量。关于模式匹配的更多信息请参考 [模式](../03_language_reference/07_Patterns.html)。
+在 `catch` 后面写一个匹配模式来表明这个子句能处理什么样的错误。如果一条 `catch` 子句没有指定匹配模式，那么这条子句可以匹配任何错误，并且把错误绑定到一个名字为 `error` 的局部常量。关于模式匹配的更多信息请参考 [模式](../03_language_reference/08_Patterns.md)。
 
 举例来说，下面的代码处理了 `VendingMachineError` 枚举类型的全部三种情况：
 
@@ -173,14 +175,14 @@ do {
 
 `catch` 子句不必将 `do` 子句中的代码所抛出的每一个可能的错误都作处理。如果所有 `catch` 子句都未处理错误，错误就会传递到周围的作用域。然而，错误还是必须要被某个周围的作用域处理的。在不会抛出错误的函数中，必须用 `do-catch` 语句处理错误。而能够抛出错误的函数既可以使用 `do-catch` 语句处理，也可以让调用方来处理错误。如果错误传递到了顶层作用域却依然没有被处理，你会得到一个运行时错误。
 
-以下面的代码为例，不是 `VendingMachineError` 中申明的错误会在调用函数的地方被捕获：
+以下面的代码为例，不是 `VendingMachineError` 中声明的错误会在调用函数的地方被捕获：
 
 ```swift
 func nourish(with item: String) throws {
     do {
         try vendingMachine.vend(itemNamed: item)
     } catch is VendingMachineError {
-        print("Invalid selection, out of stock, or not enough money.")
+        print("Couldn't buy that from the vending machine.")
     }
 }
 
@@ -189,10 +191,26 @@ do {
 } catch {
     print("Unexpected non-vending-machine-related error: \(error)")
 }
-// 打印“Invalid selection, out of stock, or not enough money.”
+// 打印“Couldn't buy that from the vending machine.”
 ```
 
 如果 `vend(itemNamed:)` 抛出的是一个 `VendingMachineError` 类型的错误，`nourish(with:)` 会打印一条消息，否则 `nourish(with:)` 会将错误抛给它的调用方。这个错误之后会被通用的 `catch` 语句捕获。
+
+另一种捕获多个相关错误的方式是将它们放在 `catch` 后，通过逗号分隔。
+
+例如：
+
+```swift
+func eat(item: String) throws {
+    do {
+        try vendingMachine.vend(itemNamed: item)
+    } catch VendingMachineError.invalidSelection, VendingMachineError.insufficientFunds, VendingMachineError.outOfStock {
+        print("Invalid selection, out of stock, or not enough money.")
+    }
+}
+```
+
+`eat(item:)` 函数捕获了列出来的 `VendingMachine` 错误，且它的错误文本和列表的错误相关。如果列出来的三个错误中任意一个抛出，这个 `catch` 代码块就会打印信息。其他错误会传递到外面的作用域，包括以后可能添加的其他 `VendingMachine` 错误。
 
 ### 将错误转换成可选值 {#converting-errors-to-optional-values}
 

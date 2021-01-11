@@ -9,7 +9,6 @@ Swift 中存在四种表达式：前缀表达式，二元表达式，基本表�
 
 #### expression {#expression}
 > *表达式* → [try 运算符](#try-operator)<sub>可选</sub> [前缀表达式](#prefix-expression) [二元表达式列表](#binary-expressions)<sub>可选</sub>
-> 
 
 #### expression-list {#expression-list}
 
@@ -206,7 +205,7 @@ f(x as Any)
 > 
 
 #### primary-expression {#primary-expression}
-> *基本表达式* → [标识符](./02_Lexical_Structure.md#identifier) [泛型实参子句](./09-Generic-Parameters-and-Arguments.md#generic-argument-clause)<sub>可选</sub>
+> *基本表达式* → [标识符](./02_Lexical_Structure.md#identifier) [泛型实参子句](./09_Generic_Parameters_and_Arguments.md#generic-argument-clause)<sub>可选</sub>
 > 
 > *基本表达式* → [字面量表达式](#literal-expression)
 > 
@@ -232,11 +231,18 @@ f(x as Any)
 
 字面量 | 类型 | 值
 :------------- | :---------- | :----------
-`#file` | `String` | 所在的文件名
+`#file` | `String` | 所在的文件名及模块 
+`#filePath` | `String` | 所在的文件路径
 `#line` | `Int` | 所在的行数
 `#column` | `Int` | 所在的列数
 `#function` | `String` | 所在的声明的名字
+`#dsohandle` | `UnsafeRawPointer` | 所使用的 DSO（动态共享对象）句柄
 
+`#file` 表达式的值的格式是 *module*/*file*，*file* 是表达式所在的文件名，*module* 是文件所所在的模块名。`#filePath` 表达式的字符串值是表达式所在的文件在整个文件系统里的路径。所有这些值可以被 `#sourceLocation` 改变，详见 [行控制语句](./05_Statements.md#line-control-statements)。 
+
+> 注意
+>
+> 要解析 `#file` 表达式，第一个斜杠（/）之前的文本作为模块名，最后一个斜杠之后的文本作为文件名。将来，该字符串可能包含多个斜杠，例如 `MyModule/some/disambiguation/MyFile.swift`。
 
 对于 `#function`，在函数中会返回当前函数的名字，在方法中会返回当前方法的名字，在属性的存取器中会返回属性的名字，在特殊的成员如 `init` 或 `subscript` 中会返回这个关键字的名字，在某个文件中会返回当前模块的名字。
 
@@ -288,7 +294,7 @@ Xcode 使用 playground 字面量对程序编辑器中的颜色、文件或者�
 > 
 > *字面量表达式* → [数组字面量](#array-literal) | [字典字面量](#dictionary-literal) | [练习场字面量](#playground-literal)
 > 
-> *字面量表达式* → **#file** | **#line** | **#column** | **#function**
+> *字面量表达式* → **#file** ｜ **#filePath** | **#line** | **#column** | **#function**
 > 
 
 
@@ -463,7 +469,7 @@ myFunction { $0 + $1 }
 
 使用闭包表达式时，可以不必将其存储在一个变量或常量中，例如作为函数调用的一部分来立即使用一个闭包。在上面的例子中，传入 `myFunction` 的闭包表达式就是这种立即使用类型的闭包。因此，一个闭包是否逃逸与其使用时的上下文相关。一个会被立即调用或者作为函数的非逃逸参数传递的闭包表达式是非逃逸的，否则，这个闭包表达式是逃逸的。
 
-关于逃逸闭包的内容，请参阅 [逃逸闭包](./02_language_guide/07_Closures.md#escaping-closures)。
+关于逃逸闭包的内容，请参阅 [逃逸闭包](../02_language_guide/07_Closures.md#escaping-closures)。
 
 ## 捕获列表 {#capture-lists}
 默认情况下，闭包会捕获附近作用域中的常量和变量，并使用强引用指向它们。你可以通过一个*捕获列表*来显式指定它的捕获行为。
@@ -521,7 +527,7 @@ myFunction { [unowned self] in print(self.title) } // 无主引用捕获
 myFunction { [weak parent = self.parent] in print(parent!.title) }
 ```
 
-关于闭包表达式的更多信息和例子，请参阅 [闭包表达式](../02_language_guide/07_Closures.md#closure-expressions)。关于捕获列表的更多信息和例子，请参阅 [解决闭包引起的循环强引用](../02-language-guide/24-Automatic-Reference-Counting.md#resolving-strong-reference-cycles-for-closures)。
+关于闭包表达式的更多信息和例子，请参阅 [闭包表达式](../02_language_guide/07_Closures.md#closure-expressions)。关于捕获列表的更多信息和例子，请参阅 [解决闭包引起的循环强引用](../02_language_guide/24_Automatic_Reference_Counting.md#resolving-strong-reference-cycles-for-closures)。
 
 > 闭包表达式语法
 > 
@@ -536,13 +542,13 @@ myFunction { [weak parent = self.parent] in print(parent!.title) }
 ####  closure-signature {#closure-signature}
 > 
 >
-> 闭包签名* → [参数子句](#parameter-clause) [函数结果](05-Declarations.md#function-result)<sub>可选</sub> **in**
+> 闭包签名* → [参数子句](#parameter-clause) [函数结果](./06_Declarations.md#function-result)<sub>可选</sub> **in**
 > 
-> *闭包签名* → [标识符列表](#identifier-list) [函数结果](05-Declarations.md#function-result)<sub>可选</sub> **in**
+> *闭包签名* → [标识符列表](#identifier-list) [函数结果](./06_Declarations.md#function-result)<sub>可选</sub> **in**
 > 
-> *闭包签名* → [捕获列表](#capture-list) [参数子句](05-Declarations.md#parameter-clause) [函数结果](./06-Declarations.md#function-result)<sub>可选</sub> **in**
+> *闭包签名* → [捕获列表](#capture-list) [参数子句](./06_Declarations.md#parameter-clause) [函数结果](./06_Declarations.md#function-result)<sub>可选</sub> **in**
 > 
-> *闭包签名* → [捕获列表](#capture-list) [标识符列表](02-Lexical-Structure.md#identifier-list) [函数结果](./06-Declarations.md#function-result)<sub>可选</sub> **in**
+> *闭包签名* → [捕获列表](#capture-list) [标识符列表](./02_Lexical_Structure.md#identifier-list) [函数结果](./06_Declarations.md#function-result)<sub>可选</sub> **in**
 > 
 > *闭包签名* → [捕获列表](#capture-list) **in**
 > 
@@ -628,7 +634,7 @@ x = .AnotherValue
 > 
 
 #### tuple-element {#tuple-element}
-> *元组元素* → [表达式](#expression) | [标识符](identifier) **:** [表达式](#expression)
+> *元组元素* → [表达式](#expression) | [标识符](#identifier) **:** [表达式](#expression)
 > 
 
 ### 通配符表达式 {#wildcard-expression}
@@ -757,7 +763,7 @@ print(count as Any)
 // 打印 "Optional(5)"
 ```
 
-可以混合使用各种 key-path 组件来访问一些深度嵌套类型的值。下面的代码通过组合不同的组件，使用 key-path 表达式访问了一个字典数组中不同的值和属性。
+可以混合使用各种 key path 组件来访问一些深度嵌套类型的值。下面的代码通过组合不同的组件，使用 key-path 表达式访问了一个字典数组中不同的值和属性。
 
 ```swift
 let interestingNumbers = ["prime": [2, 3, 5, 7, 11, 13, 17],
@@ -771,6 +777,39 @@ print(interestingNumbers[keyPath: \[String: [Int]].["hexagonal"]!.count])
 // 打印 "7"
 print(interestingNumbers[keyPath: \[String: [Int]].["hexagonal"]!.count.bitWidth])
 // 打印 "64"
+```
+
+你可以在平时提供函数或者闭包的上下文里使用 key path 表达式。特别地，你可以用根类型是 `SomeType` 和路径产生 `Value` 类型值的 key path 表达式来替换类型是 `(SomeType) -> Value` 的函数或者闭包。
+
+```swift
+struct Task {
+    var description: String
+    var completed: Bool
+}
+var toDoList = [
+    Task(description: "Practice ping-pong.", completed: false),
+    Task(description: "Buy a pirate costume.", completed: true),
+    Task(description: "Visit Boston in the Fall.", completed: false),
+]
+
+// 下面两种写法是等价的。
+let descriptions = toDoList.filter(\.completed).map(\.description)
+let descriptions2 = toDoList.filter { $0.completed }.map { $0.description }
+```
+
+任何 key path 表达式的副作用发生的关键在于表达式在哪里被执行。例如，如果你在 key path 表达式中的一个下标里使用函数调用，该函数只会在表达式计算的时候调用一次，而不是每次这个 key path 被使用的时候。
+
+```swift
+func makeIndex() -> Int {
+    print("Made an index")
+    return 0
+}
+// 下面这行调用 makeIndex()。
+let taskKeyPath = \[Task][makeIndex()]
+// 打印 "Made an index"
+
+// 使用 taskKeyPath 不会再次调用 makeIndex()。
+let someTask = toDoList[keyPath: taskKeyPath]
 ```
 
 关于更多如何使用 key path 与 Objective-C APIs 交互的信息，请参阅 [在 Swift 中使用 Objective-C 运行时特性](https://developer.apple.com/documentation/swift/using_objective_c_runtime_features_in_swift)。关于更多 key-value 编程和 key-value 观察的信息，请参阅 [Key-Value 编程](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/index.html#//apple-ref/doc/uid/10000107i) 和 [Key-Value 观察编程](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.html#//apple-ref/doc/uid/10000177i)。
@@ -900,7 +939,7 @@ print(keyPath == c.getSomeKeyPath())
 
 由于 key-path 字符串表达式在编译期才创建，编译期可以检查属性是否存在，以及属性是否暴露给 Objective-C 运行时。
 
-关于更多如何使用 key path 与 Objective-C APIs 交互的信息，请参阅 [在 Swift 中使用 Objective-C 运行时特性](./https://developer.apple.com/documentation/swift/using_objective_c_runtime_features_in_swift)。关于更多 key-value 编程和 key-value 观察的信息，请参阅 [Key-Value 编程](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/index.md#//apple-ref/doc/uid/10000107i) 和 [Key-Value 观察编程](./https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.md#//apple-ref/doc/uid/10000177i)。
+关于更多如何使用 key path 与 Objective-C APIs 交互的信息，请参阅 [在 Swift 中使用 Objective-C 运行时特性](https://developer.apple.com/documentation/swift/using_objective_c_runtime_features_in_swift)。关于更多 key-value 编程和 key-value 观察的信息，请参阅 [Key-Value 编程](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/index.md#//apple-ref/doc/uid/10000107i) 和 [Key-Value 观察编程](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.md#//apple-ref/doc/uid/10000177i)。
 
 > 注意
 > 
@@ -929,7 +968,7 @@ print(keyPath == c.getSomeKeyPath())
 #### postfix-expression {#postfix-expression}
 > *后缀表达式* → [基本表达式](#primary-expression)
 > 
-> *后缀表达式* → [后缀表达式](#postfix-expression) [后缀运算符](02-Lexical-Structure.md#postfix-operator)
+> *后缀表达式* → [后缀表达式](#postfix-expression) [后缀运算符](./02_Lexical_Structure.md#postfix-operator)
 > 
 > *后缀表达式* → [函数调用表达式](#function-call-expression)
 > 
@@ -959,14 +998,17 @@ print(keyPath == c.getSomeKeyPath())
 如果函数声明中指定了参数的名字，那么在调用的时候也必须得写出来。这种函数调用表达式具有以下形式：
 
 > `函数名`(`参数名 1`: `参数 1`, `参数名 2`: `参数 2`)
-> 
 
 如果函数的最后一个参数是函数类型，可以在函数调用表达式的尾部（右圆括号之后）加上一个闭包，该闭包会作为函数的最后一个参数。如下两种写法是等价的：
 
 ```swift
-// someFunction 接受整数和闭包参数
+// someFunction 接受整型和闭包的实参
 someFunction(x, f: {$0 == 13})
 someFunction(x) {$0 == 13}
+
+// anotherFunction 接受一个整型和两个闭包的实参
+anotherFunction(x: x, f: { $0 == 13 }, g: { print(99) })
+anotherFunction(x: x) { $0 == 13 } g: { print(99) }
 ```
 
 如果闭包是该函数的唯一参数，那么圆括号可以省略。
@@ -988,30 +1030,32 @@ myData.someMethod {$0 == 13}
 > 
 > *函数调用表达式* → [后缀表达式](#postfix-expression) [函数调用参数子句](#function-call-argument-clause)<sub>可选</sub> [尾随闭包](#trailing-closure)
 > 
+>####  function-call-argument-clause {#function-call-argument-clause}
 >
-> 
-####  function-call-argument-clause {#function-call-argument-clause}
-> 
 > *函数调用参数子句* → **(**  **)**  | **(** [函数调用参数表](#function-call-argument-list) **)**
 > 
-> 
-####  function-call-argument-list {#function-call-argument-list}
+> ####  function-call-argument-list {#function-call-argument-list}
 > 
 > *函数调用参数表* → [函数调用参数](#function-call-argument) | [函数调用参数](#function-call-argument) **,** [*函数调用参数表*](#function-call-argument-list)
 > 
 > 
-####  function-call-argument {#function-call-argument}
+> ####  function-call-argument {#function-call-argument}
 > 
-> *函数调用参数* → [表达式](#expression) | [标识符](02-Lexical-Structure.md#identifier) **:** [表达式](#expression)
+> *函数调用参数* → [表达式](#expression) | [标识符](./02_Lexical_Structure.md#identifier) **:** [表达式](#expression)
 > 
-> *函数调用参数* → [运算符](./02_Lexical_Structure.md#operator) | [标识符](./02-Lexical-Structure.md#identifier) **:** [运算符](./02-Lexical-Structure.md#operator)
+> *函数调用参数* → [运算符](./02_Lexical_Structure.md#operator) | [标识符](./02_Lexical_Structure.md#identifier) **:** [运算符](./02_Lexical_Structure.md#operator)
 > 
->
-> 
-####  trailing-closure {#trailing-closure}
+> ####  trailing-closure {#trailing-closure}
 > 
 > *尾随闭包* → [闭包表达式](#closure-expression)
+>
+> #### labeled-trailing-closures {#labeled-trailing-closures}
 > 
+> *标签尾随闭包集*  → [标签尾随闭包](#labeled-trailing-closure) [标签尾随闭包集](#labeled-trailing-closures)<sub>可选</sub>
+> 
+> #### labeled-trailing-closure {#labeled-trailing-closure}
+> *标签尾随闭包* → [标识符](./02_Lexical_Structure.md#identifier) **:** [闭包表达式](#closure-expression) 
+
 
 ### 构造器表达式 {#initializer-expression}
 *构造器表达式*用于访问某个类型的构造器，形式如下：
@@ -1119,11 +1163,11 @@ let x = [10, 3, 20, 15, 4]
 > 
 
 #### explicit-member-expression {#explicit-member-expression}
-> *显式成员表达式* → [后缀表达式](#postfix-expression) **.** [十进制数字](02-Lexical-Structure.md#decimal-digit)
+> *显式成员表达式* → [后缀表达式](#postfix-expression) **.** [十进制数字](./02_Lexical_Structure.md#decimal-digit)
 > 
-> *显式成员表达式* → [后缀表达式](#postfix-expression) **.** [标识符](02-Lexical-Structure.md#identifier) [泛型实参子句](./09-Generic-Parameters-and-Arguments.md#generic-argument-clause)<sub>可选</sub><br/>
+> *显式成员表达式* → [后缀表达式](#postfix-expression) **.** [标识符](./02_Lexical_Structure.md#identifier) [泛型实参子句](./09_Generic_Parameters_and_Arguments.md#generic-argument-clause)<sub>可选</sub><br/>
 > 
-> *显式成员表达式* → [后缀表达式](#postfix-expression) **.** [标识符](02-Lexical-Structure.md#identifier) **(** [参数名称](#argument-names) **)**
+> *显式成员表达式* → [后缀表达式](#postfix-expression) **.** [标识符](./02_Lexical_Structure.md#identifier) **(** [参数名称](#argument-names) **)**
 
 #### argument-names {#argument-names}
 > *参数名称* → [参数名](#argument-name) [参数名称](#argument-names)<sub>可选</sub><br/>
